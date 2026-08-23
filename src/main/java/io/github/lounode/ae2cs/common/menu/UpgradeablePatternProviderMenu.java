@@ -16,7 +16,6 @@ import appeng.menu.SlotSemantics;
 import appeng.menu.ToolboxMenu;
 import appeng.menu.guisync.GuiSync;
 import appeng.menu.slot.AppEngSlot;
-import appeng.menu.slot.RestrictedInputSlot;
 
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MenuType;
@@ -120,29 +119,24 @@ public class UpgradeablePatternProviderMenu extends AEBaseMenu {
      * addon) — the "one slot, two uses" behavior. Disk detection is reflective to avoid a hard
      * compile-time dependency on the addon.
      */
-    private static class DiskAwarePatternSlot extends appeng.menu.slot.AppEngSlot
-    {
-        DiskAwarePatternSlot(appeng.api.inventories.InternalInventory inv, int index)
-        {
+    private static class DiskAwarePatternSlot extends appeng.menu.slot.AppEngSlot {
+
+        DiskAwarePatternSlot(appeng.api.inventories.InternalInventory inv, int index) {
             super(inv, index);
         }
 
         @Override
-        public boolean mayPlace(net.minecraft.world.item.ItemStack stack)
-        {
+        public boolean mayPlace(net.minecraft.world.item.ItemStack stack) {
             if (stack == null || stack.isEmpty())
                 return false;
             // Accept vanilla patterns.
             if (appeng.api.crafting.PatternDetailsHelper.isEncodedPattern(stack))
                 return true;
             // Accept pattern disks (reflective check for the addon's `contents(ItemStack)` method).
-            try
-            {
+            try {
                 stack.getItem().getClass().getMethod("contents", net.minecraft.world.item.ItemStack.class);
                 return true;
-            }
-            catch (NoSuchMethodException e)
-            {
+            } catch (NoSuchMethodException e) {
                 return false;
             }
         }

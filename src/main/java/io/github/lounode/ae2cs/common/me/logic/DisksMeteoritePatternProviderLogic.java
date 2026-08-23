@@ -1,11 +1,11 @@
 package io.github.lounode.ae2cs.common.me.logic;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import io.github.lounode.ae2cs.common.block.entity.MeteoritePatternProviderBlockEntity;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import appeng.api.crafting.IPatternDetails;
+import appeng.api.crafting.PatternDetailsHelper;
+import appeng.api.inventories.InternalInventory;
+import appeng.api.networking.IManagedGridNode;
 
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,25 +15,29 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.ModList;
 
-import appeng.api.crafting.IPatternDetails;
-import appeng.api.crafting.PatternDetailsHelper;
-import appeng.api.inventories.InternalInventory;
-import appeng.api.networking.IManagedGridNode;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-import io.github.lounode.ae2cs.common.block.entity.MeteoritePatternProviderBlockEntity;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * A {@link MeteoritePatternProviderLogic} whose available patterns are the union of vanilla patterns and
  * expanded <b>pattern disks</b> (AE2 Pattern Disk addon) — the "one slot, two uses" approach.
  *
- * <p><b>Sealed contract:</b> AECS carries its own copy of the disk content format ({@link DiskContents}).
+ * <p>
+ * <b>Sealed contract:</b> AECS carries its own copy of the disk content format ({@link DiskContents}).
  * The addon's {@code ae2_pattern_disk:disk_contents} data component value is read via the component's own
  * codec (encode to NBT, then decode with our format copy) — no reflective calls, no class dependency. The
  * two mods only share the <i>formats</i> ({@code type}/{@code capacity}/{@code patterns}), so either side
- * may evolve its parsing independently.</p>
+ * may evolve its parsing independently.
+ * </p>
  *
- * <p>The disk algorithm is active only when the addon is loaded ({@link #isAddonLoaded()}); otherwise the
- * provider behaves exactly like the vanilla one.</p>
+ * <p>
+ * The disk algorithm is active only when the addon is loaded ({@link #isAddonLoaded()}); otherwise the
+ * provider behaves exactly like the vanilla one.
+ * </p>
  */
 public class DisksMeteoritePatternProviderLogic extends MeteoritePatternProviderLogic {
 
@@ -41,6 +45,7 @@ public class DisksMeteoritePatternProviderLogic extends MeteoritePatternProvider
 
     /** Contract copy of the addon's disk content format. */
     public record DiskContents(String type, int capacity, List<ItemStack> patterns) {
+
         public static final Codec<DiskContents> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.STRING.optionalFieldOf("type").forGetter(c -> Optional.ofNullable(c.type)),
                 Codec.INT.fieldOf("capacity").forGetter(DiskContents::capacity),
@@ -52,9 +57,9 @@ public class DisksMeteoritePatternProviderLogic extends MeteoritePatternProvider
     private final MeteoritePatternProviderBlockEntity host;
 
     public DisksMeteoritePatternProviderLogic(
-            IManagedGridNode mainNode,
-            MeteoritePatternProviderBlockEntity host,
-            int patternInventorySize) {
+                                              IManagedGridNode mainNode,
+                                              MeteoritePatternProviderBlockEntity host,
+                                              int patternInventorySize) {
         super(mainNode, host, patternInventorySize);
         this.host = host;
     }

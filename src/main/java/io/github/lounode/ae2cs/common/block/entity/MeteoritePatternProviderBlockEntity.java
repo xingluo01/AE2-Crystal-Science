@@ -5,7 +5,6 @@ import io.github.lounode.ae2cs.common.init.AECSBlocks;
 import io.github.lounode.ae2cs.common.init.AECSMenus;
 import io.github.lounode.ae2cs.common.me.logic.DisksMeteoritePatternProviderLogic;
 import io.github.lounode.ae2cs.common.me.logic.MeteoritePatternProviderHost;
-import io.github.lounode.ae2cs.common.me.logic.MeteoritePatternProviderLogic;
 
 import appeng.api.AECapabilities;
 import appeng.api.stacks.AEItemKey;
