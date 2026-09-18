@@ -1,6 +1,7 @@
 package io.github.lounode.ae2cs.common.me.logic;
 
 import io.github.lounode.ae2cs.AE2CrystalScience;
+import io.github.lounode.ae2cs.api.ids.AECSConstants;
 import io.github.lounode.ae2cs.api.settings.AECSSettings;
 import io.github.lounode.ae2cs.api.settings.PullMode;
 import io.github.lounode.ae2cs.api.util.GenericStackInvHelper;
@@ -9,6 +10,7 @@ import io.github.lounode.ae2cs.common.init.AECSDataComponents;
 import io.github.lounode.ae2cs.common.me.crafting.EncodedResonatingPattern;
 import io.github.lounode.ae2cs.common.me.crafting.ResonatingPatternDetails;
 import io.github.lounode.ae2cs.common.me.crafting.ResonatingProviderDefaults;
+import io.github.lounode.ae2cs.integration.patterndisk.PatternDiskSupport;
 
 import appeng.api.config.Actionable;
 import appeng.api.config.LockCraftingMode;
@@ -35,6 +37,7 @@ import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.helpers.patternprovider.PatternProviderTarget;
 import appeng.me.helpers.MachineSource;
 import appeng.util.ConfigManager;
+import appeng.util.inv.AppEngInternalInventory;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,6 +52,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+
+import net.neoforged.fml.ModList;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -97,6 +102,22 @@ public class ResonatingPatternProviderLogic extends PatternProviderLogic impleme
 
     public ResonatingPatternProviderLogic(IManagedGridNode mainNode, PatternProviderLogicHost host) {
         this(mainNode, host, 9);
+    }
+
+    /**
+     * A disk in one of the pattern slots changes what the terminal view should show, so the cached one has
+     * to go. The gate comes first: the support class names AE2 Pattern Disk's types.
+     */
+    @Override
+    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
+        super.onChangeInventory(inv, slot);
+        // The constructor can reach here before the host field is assigned.
+        if (host == null) {
+            return;
+        }
+        if (ModList.get().isLoaded(AECSConstants.PATTERN_DISK_ID)) {
+            PatternDiskSupport.invalidate(host);
+        }
     }
 
     public ResonatingPatternProviderLogic(IManagedGridNode mainNode, PatternProviderLogicHost host, int patternInventorySize) {

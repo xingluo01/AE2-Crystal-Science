@@ -12,7 +12,8 @@ public class MeteoritePatternProviderMenu extends UpgradeablePatternProviderMenu
     private final MeteoritePatternProviderHost host;
 
     public MeteoritePatternProviderMenu(MenuType<? extends UpgradeablePatternProviderMenu> menuType, int id, Inventory playerInventory, MeteoritePatternProviderHost host) {
-        super(menuType, id, playerInventory, host);
+        // Its slots also take disks: this provider decodes them.
+        super(menuType, id, playerInventory, host, true);
         this.host = host;
     }
 

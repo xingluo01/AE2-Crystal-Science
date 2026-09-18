@@ -13,11 +13,12 @@ import io.github.lounode.ae2pattern.api.PatternDiskApi;
  * for the disks, whole disks full of them.
  *
  * <p>AE2's pattern access terminal can read exactly one inventory, so handing it the disk view alone would
- * make the plain patterns beside the disks vanish from the terminal. This composite shows both: every
- * slot holding anything but a disk keeps its row, empty ones included - that is where a terminal or an
- * uploader puts a pattern, so compressing them away would cost the write side its landing spots - while
- * the disks contribute their expanded rows through the disk mod's own view. Taking a plain row is an
- * ordinary take; taking a disk row charges a blank pattern and removes the recipe from its disk.</p>
+ * make the plain patterns beside the disks vanish from the terminal. This composite shows both: the disk
+ * rows come first, then every slot that is not a disk keeps its row, empty ones included - that is where a
+ * terminal writes. The disks lead because the upload path walks the rows from index 0 and stops at the
+ * first one that takes the pattern; with the empty slots ahead of them an upload would land in a plain
+ * slot instead of on a disk. Taking a plain row is an ordinary take; taking a disk row charges a blank
+ * pattern and removes the recipe from its disk.</p>
  *
  * <p>Rows are laid out once, on construction - a terminal keeps the slot count it opened with, so a view
  * is rebuilt rather than rearranged when the disks change.</p>
@@ -34,10 +35,7 @@ final class DiskAwareTerminalInventory implements InternalInventory {
         this.plainRowToSlot = plainRows(slots);
     }
 
-    /**
-     * The slots that are not disks, in slot order. Empty slots stay in: a terminal writes into those, and
-     * that is also where an uploader looks for room.
-     */
+    /** The slots that are not disks, in slot order. Empty slots stay in - a terminal writes into those. */
     private static int[] plainRows(InternalInventory slots) {
         var rows = new ArrayList<Integer>();
         for (int slot = 0; slot < slots.size(); slot++) {
@@ -54,7 +52,7 @@ final class DiskAwareTerminalInventory implements InternalInventory {
 
     @Override
     public int size() {
-        return plainRowToSlot.length + diskRows.size();
+        return diskRows.size() + plainRowToSlot.length;
     }
 
     @Override
@@ -62,9 +60,9 @@ final class DiskAwareTerminalInventory implements InternalInventory {
         if (isOutOfRange(slotIndex)) {
             return ItemStack.EMPTY;
         }
-        return slotIndex < plainRowToSlot.length
-                ? slots.getStackInSlot(plainRowToSlot[slotIndex])
-                : diskRows.getStackInSlot(slotIndex - plainRowToSlot.length);
+        return isDiskRow(slotIndex)
+                ? diskRows.getStackInSlot(slotIndex)
+                : slots.getStackInSlot(plainRowToSlot[slotIndex - diskRows.size()]);
     }
 
     @Override
@@ -72,11 +70,11 @@ final class DiskAwareTerminalInventory implements InternalInventory {
         if (isOutOfRange(slotIndex)) {
             return;
         }
-        if (slotIndex < plainRowToSlot.length) {
-            slots.setItemDirect(plainRowToSlot[slotIndex], stack);
+        if (isDiskRow(slotIndex)) {
+            diskRows.setItemDirect(slotIndex, stack);
             return;
         }
-        diskRows.setItemDirect(slotIndex - plainRowToSlot.length, stack);
+        slots.setItemDirect(plainRowToSlot[slotIndex - diskRows.size()], stack);
     }
 
     @Override
@@ -87,21 +85,21 @@ final class DiskAwareTerminalInventory implements InternalInventory {
         if (isOutOfRange(slotIndex)) {
             return ItemStack.EMPTY;
         }
-        if (slotIndex < plainRowToSlot.length) {
-            return slots.extractItem(plainRowToSlot[slotIndex], amount, simulate);
+        if (isDiskRow(slotIndex)) {
+            return diskRows.extractItem(slotIndex, amount, simulate);
         }
-        return diskRows.extractItem(slotIndex - plainRowToSlot.length, amount, simulate);
+        return slots.extractItem(plainRowToSlot[slotIndex - diskRows.size()], amount, simulate);
     }
 
     @Override
     public boolean isItemValid(int slotIndex, ItemStack stack) {
-        if (isOutOfRange(slotIndex)) {
+        if (isOutOfRange(slotIndex) || isDiskRow(slotIndex)) {
+            // A disk row says no, exactly as the disk view does: every path that writes onto a disk goes
+            // through insertItem. An uploader that probed isItemValid first would therefore skip the disk
+            // rows and settle for a plain slot.
             return false;
         }
-        if (slotIndex < plainRowToSlot.length) {
-            return slots.isItemValid(plainRowToSlot[slotIndex], stack);
-        }
-        return false; // a terminal never writes onto a disk
+        return slots.isItemValid(plainRowToSlot[slotIndex - diskRows.size()], stack);
     }
 
     @Override
@@ -109,10 +107,10 @@ final class DiskAwareTerminalInventory implements InternalInventory {
         if (isOutOfRange(slotIndex)) {
             return stack;
         }
-        if (slotIndex < plainRowToSlot.length) {
-            return slots.insertItem(plainRowToSlot[slotIndex], stack, simulate);
+        if (isDiskRow(slotIndex)) {
+            return diskRows.insertItem(slotIndex, stack, simulate);
         }
-        return diskRows.insertItem(slotIndex - plainRowToSlot.length, stack, simulate);
+        return slots.insertItem(plainRowToSlot[slotIndex - diskRows.size()], stack, simulate);
     }
 
     @Override
@@ -120,10 +118,10 @@ final class DiskAwareTerminalInventory implements InternalInventory {
         if (isOutOfRange(slotIndex)) {
             return 0;
         }
-        if (slotIndex < plainRowToSlot.length) {
-            return slots.getSlotLimit(plainRowToSlot[slotIndex]);
+        if (isDiskRow(slotIndex)) {
+            return 1; // a disk row holds one pattern; the disk view's default would allow a whole stack
         }
-        return 1; // a disk row holds one pattern; the disk view's default would allow a whole stack
+        return slots.getSlotLimit(plainRowToSlot[slotIndex - diskRows.size()]);
     }
 
     /**
@@ -137,10 +135,10 @@ final class DiskAwareTerminalInventory implements InternalInventory {
         if (isOutOfRange(slotIndex)) {
             return InternalInventory.empty();
         }
-        if (slotIndex < plainRowToSlot.length) {
-            return slots.getSlotInv(plainRowToSlot[slotIndex]);
+        if (isDiskRow(slotIndex)) {
+            return diskRows.getSlotInv(slotIndex);
         }
-        return diskRows.getSlotInv(slotIndex - plainRowToSlot.length);
+        return slots.getSlotInv(plainRowToSlot[slotIndex - diskRows.size()]);
     }
 
     @Override
@@ -148,11 +146,20 @@ final class DiskAwareTerminalInventory implements InternalInventory {
         if (isOutOfRange(slotIndex)) {
             return;
         }
-        if (slotIndex < plainRowToSlot.length) {
-            slots.sendChangeNotification(plainRowToSlot[slotIndex]);
+        if (isDiskRow(slotIndex)) {
+            diskRows.sendChangeNotification(slotIndex);
             return;
         }
-        diskRows.sendChangeNotification(slotIndex - plainRowToSlot.length);
+        slots.sendChangeNotification(plainRowToSlot[slotIndex - diskRows.size()]);
+    }
+
+    /**
+     * The disks sit at the front on purpose: the upload path walks rows from index 0 and stops at the first
+     * one that accepts the pattern, so leading with them is what makes an upload land on a disk rather than
+     * in one of the provider's own empty slots.
+     */
+    private boolean isDiskRow(int slotIndex) {
+        return slotIndex >= 0 && slotIndex < diskRows.size();
     }
 
     private boolean isOutOfRange(int slotIndex) {

@@ -1,13 +1,18 @@
 package io.github.lounode.ae2cs.common.me.logic;
 
+import io.github.lounode.ae2cs.api.ids.AECSConstants;
 import io.github.lounode.ae2cs.common.me.crafting.EncodedResonatingPattern;
+import io.github.lounode.ae2cs.integration.patterndisk.PatternDiskSupport;
 
+import appeng.api.inventories.InternalInventory;
 import appeng.api.upgrades.IUpgradeInventory;
 import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.helpers.patternprovider.PatternProviderLogicHost;
 
 import net.minecraft.world.item.ItemStack;
+
+import net.neoforged.fml.ModList;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,4 +56,23 @@ public interface ResonatingPatternProviderHost extends PatternProviderLogicHost,
     }
 
     void markForLogicClientUpdate();
+
+    /**
+     * What AE2's pattern access terminal - and an uploader picking a target - reads.
+     *
+     * <p>This provider's pattern slots take no disks of their own: its menu keeps AE2's plain pattern slot,
+     * so in practice this is an identity passthrough. It is overridden all the same - a disk that reached a
+     * slot by some other route stays visible and usable, and the terminal then sees the same rows the
+     * upload path does.</p>
+     *
+     * <p>The gate has to come first: the support class names that mod's types, and without it installed
+     * this method must never load it.</p>
+     */
+    @Override
+    default InternalInventory getTerminalPatternInventory() {
+        if (!ModList.get().isLoaded(AECSConstants.PATTERN_DISK_ID)) {
+            return getLogic().getPatternInv();
+        }
+        return PatternDiskSupport.terminalView(this);
+    }
 }

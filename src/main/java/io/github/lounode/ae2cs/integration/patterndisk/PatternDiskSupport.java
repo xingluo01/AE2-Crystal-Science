@@ -5,14 +5,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
+import io.github.lounode.ae2cs.api.ids.AECSConstants;
 import io.github.lounode.ae2cs.common.me.logic.MeteoritePatternProviderHost;
+import io.github.lounode.ae2cs.common.me.logic.ResonatingPatternProviderHost;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.security.IActionHost;
+import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.parts.AEBasePart;
+
+import net.neoforged.fml.ModList;
 
 import io.github.lounode.ae2pattern.api.IPatternDiskHost;
 import io.github.lounode.ae2pattern.api.PatternDiskApi;
@@ -22,12 +28,14 @@ import io.github.lounode.ae2pattern.common.pattern.PatternDiskTerminalView;
  * The entry point of this package; its classes are the only ones in this mod that name AE2 Pattern Disk's
  * types.
  *
- * <p>Every caller reaches it behind a loaded-mod check, so a game without that mod never loads this class
- * at all - its types are resolved on first use, and a missing mod would otherwise show up as a
- * {@code NoClassDefFoundError} at the worst possible moment.</p>
+ * <p>Each entry point that names that mod's types is guarded by a loaded-mod check - at the callers'
+ * sites, or inside {@link #isPatternDisk} itself - so a game without that mod never resolves them: they
+ * are resolved on first use, and a missing mod would otherwise show up as a {@code NoClassDefFoundError}
+ * at the worst possible moment.</p>
  *
- * <p>Two things live here: the view AE2's pattern access terminal reads, and the disk-host registration
- * that lets that mod's own disk encoding terminal list the same machines.</p>
+ * <p>Three things live here: the view AE2's pattern access terminal reads, the disk-host registration that
+ * lets that mod's own disk encoding terminal list the same machines, and the disk check the pattern slots
+ * use to decide what they accept.</p>
  */
 public final class PatternDiskSupport {
 
@@ -39,7 +47,7 @@ public final class PatternDiskSupport {
      * server does: one whose machine is broken mid-session stays here until {@link #clearCaches()} runs at
      * shutdown.</p>
      */
-    private static final Map<MeteoritePatternProviderHost, TerminalAccess> VIEWS = new WeakHashMap<>();
+    private static final Map<PatternProviderLogicHost, TerminalAccess> VIEWS = new WeakHashMap<>();
 
     private PatternDiskSupport() {
     }
@@ -49,14 +57,14 @@ public final class PatternDiskSupport {
      * plus the recipes on its disks. Both, because the terminal can only read one inventory - see
      * {@link DiskAwareTerminalInventory}.
      */
-    public static InternalInventory terminalView(MeteoritePatternProviderHost host) {
+    public static InternalInventory terminalView(PatternProviderLogicHost host) {
         synchronized (VIEWS) {
             return VIEWS.computeIfAbsent(host, PatternDiskSupport::createAccess).rows();
         }
     }
 
     /** Drops the view cached for {@code host}, so the next read re-scans its disks. */
-    public static void invalidate(MeteoritePatternProviderHost host) {
+    public static void invalidate(PatternProviderLogicHost host) {
         synchronized (VIEWS) {
             var access = VIEWS.remove(host);
             if (access != null) {
@@ -75,15 +83,30 @@ public final class PatternDiskSupport {
         }
     }
 
-    private static TerminalAccess createAccess(MeteoritePatternProviderHost host) {
+    private static TerminalAccess createAccess(PatternProviderLogicHost host) {
         var slots = host.getLogic().getPatternInv();
         var disks = PatternDiskApi.terminalView(
                 slots,
                 host::getGrid,
                 (IActionHost) host,
-                host.getLogic()::saveChanges,
+                // A change notification rather than a bare saveChanges: it runs the host's own change
+                // handler, which re-decodes the slots. Saving alone would leave a pattern written onto a
+                // disk invisible to the crafting system.
+                () -> host.getLogic().getPatternInv().sendChangeNotification(0),
                 () -> host.getBlockEntity() == null ? null : host.getBlockEntity().getLevel());
         return new TerminalAccess(disks, new DiskAwareTerminalInventory(slots, disks.view()));
+    }
+
+    /**
+     * Whether {@code stack} is one of that mod's disks. The loaded-mod gate comes first for the same reason
+     * it does everywhere else in this class: without that mod, resolving the check would load types that
+     * are not there.
+     */
+    public static boolean isPatternDisk(ItemStack stack) {
+        if (!ModList.get().isLoaded(AECSConstants.PATTERN_DISK_ID)) {
+            return false;
+        }
+        return PatternDiskApi.isPatternDisk(stack);
     }
 
     /** Hands AE2 Pattern Disk the machines of this mod whose pattern slots may hold disks. */
@@ -107,20 +130,29 @@ public final class PatternDiskSupport {
     private static List<IPatternDiskHost> hostsOn(IGrid grid) {
         var hosts = new ArrayList<IPatternDiskHost>();
         for (var machineClass : grid.getMachineClasses()) {
-            if (machineClass == null || !MeteoritePatternProviderHost.class.isAssignableFrom(machineClass)) {
+            if (machineClass == null || !isDiskCapable(machineClass)) {
                 continue;
             }
             for (var machine : grid.getActiveMachines(machineClass)) {
-                if (machine instanceof MeteoritePatternProviderHost host) {
-                    hosts.add(new MeteoriteDiskHost(host));
+                if (machine instanceof PatternProviderLogicHost host) {
+                    hosts.add(new ProviderDiskHost(host));
                 }
             }
         }
         return hosts;
     }
 
+    /**
+     * Whether a machine class is one of this mod's providers whose pattern slots may hold a disk. Tested per
+     * class rather than per instance because the grid reports its machines by class.
+     */
+    private static boolean isDiskCapable(Class<?> machineClass) {
+        return MeteoritePatternProviderHost.class.isAssignableFrom(machineClass)
+                || ResonatingPatternProviderHost.class.isAssignableFrom(machineClass);
+    }
+
     /** A provider of this mod, presented to the disk encoding terminal as a host holding disks. */
-    private record MeteoriteDiskHost(MeteoritePatternProviderHost host) implements IPatternDiskHost {
+    private record ProviderDiskHost(PatternProviderLogicHost host) implements IPatternDiskHost {
 
         @Override
         public InternalInventory getDiskInventory() {
