@@ -1,11 +1,12 @@
 package io.github.lounode.ae2cs.common.me.logic;
 
-import io.github.lounode.ae2cs.common.block.entity.MeteoritePatternProviderBlockEntity;
+import io.github.lounode.ae2cs.integration.patterndisk.PatternDiskSupport;
 
 import appeng.api.crafting.IPatternDetails;
 import appeng.api.crafting.PatternDetailsHelper;
 import appeng.api.inventories.InternalInventory;
 import appeng.api.networking.IManagedGridNode;
+import appeng.util.inv.AppEngInternalInventory;
 
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -54,11 +55,11 @@ public class DisksMeteoritePatternProviderLogic extends MeteoritePatternProvider
     }
 
     private final List<ItemStack> diskPatterns = new ArrayList<>();
-    private final MeteoritePatternProviderBlockEntity host;
+    private final MeteoritePatternProviderHost host;
 
     public DisksMeteoritePatternProviderLogic(
                                               IManagedGridNode mainNode,
-                                              MeteoritePatternProviderBlockEntity host,
+                                              MeteoritePatternProviderHost host,
                                               int patternInventorySize) {
         super(mainNode, host, patternInventorySize);
         this.host = host;
@@ -117,6 +118,18 @@ public class DisksMeteoritePatternProviderLogic extends MeteoritePatternProvider
                     .map(pair -> pair.getFirst()).orElse(null);
         } catch (Exception e) {
             return null;
+        }
+    }
+
+    /**
+     * Drops the terminal view cached for this host, so the next read re-scans the disks: a disk being
+     * slotted in or taken out is what an inventory change looks like from here.
+     */
+    @Override
+    public void onChangeInventory(AppEngInternalInventory inv, int slot) {
+        super.onChangeInventory(inv, slot);
+        if (isAddonLoaded()) {
+            PatternDiskSupport.invalidate(host);
         }
     }
 

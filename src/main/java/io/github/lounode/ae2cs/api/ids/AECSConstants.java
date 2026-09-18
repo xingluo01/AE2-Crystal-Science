@@ -16,4 +16,5 @@ public class AECSConstants {
     public static final String AE2LT_ID = "ae2lt";
     public static final String DATA_ENERGISTICS_ID = "data_energistics";
     public static final String NEOECOAE_ID = "neoecoae";
+    public static final String PATTERN_DISK_ID = "ae2_pattern_disk";
 }

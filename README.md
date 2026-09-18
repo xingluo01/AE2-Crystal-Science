@@ -107,6 +107,13 @@ On the other side, AECS adds stronger pattern execution and wireless channel sol
 
 ## Other Info
 
+### Building from Source
+
+The disk compatibility layer compiles against the sibling **AE2 Pattern Disk** mod. Gradle expects it next
+to this repository (`../AE2-Pattern-Disk`, jar under its `build/libs`) or at the path named by the
+`PATTERN_DISK_DEV_JAR` environment variable. CI takes that jar from the `PATTERN_DISK_JAR_URL`
+repository variable, whose asset has to cover every branch the workflows build.
+
 ### Optional Mod Integrations
 Some purified crystal recipes are **only added when the corresponding mod is installed**.
 
