@@ -6,12 +6,14 @@ navigation:
   position: 70
 item_ids:
   - ae2cs:crystal_pulverizer
+  - ae2cs:resonating_pulverizer_factory
 ---
 
 # 晶能粉碎机
 
 <Row gap="16">
-  <BlockImage id="ae2cs:crystal_pulverizer" scale="8" />
+  <BlockImage id="ae2cs:crystal_pulverizer" scale="2" />
+  <BlockImage id="ae2cs:resonating_pulverizer_factory" scale="2" />
 </Row>
 
 **晶能粉碎机** 是 AECS 的中期水晶加工设备，
@@ -50,3 +52,16 @@ item_ids:
 - 可自动从所连接的 **ME 网络** 中获取能量
 - 支持通过外部能量线缆获取能量
 - **参与频道传递**
+
+---
+
+## 升级型：谐振晶能粉碎工厂
+
+**谐振晶能粉碎工厂** 是晶能粉碎机的升级型，**共用同一套配方**。
+供能、升级与自动化行为也一致，区别只在槽位与吞吐：
+它把 1 输入 / 4 输出换成两片 3×3 的格子，一次可处理最多 **32** 份。
+
+提速不来自更快的单次加工——完成一整批的时间和晶能粉碎机处理 1 份接近，
+吞吐来自每批的份数。
+上文提到的加速卡效果在这里不变，并额外提高每批份数（每张 **+4**），
+**陨石超频卡** 同理，每张 **+16**，上限 **32**。
