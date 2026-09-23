@@ -204,6 +204,9 @@ public class JeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(
                 AECSBlocks.QUARTZ_GRINDSTONE_BLOCK,
                 CrystalPulverizerRecipeCategory.RECIPE_TYPE);
+        registration.addRecipeCatalyst(
+                AECSBlocks.RESONATING_PULVERIZER_FACTORY_BLOCK,
+                CrystalPulverizerRecipeCategory.RECIPE_TYPE);
 
         registration.addRecipeCatalyst(
                 AECSBlocks.CRYSTAL_GROWTH_CHAMBER_BLOCK,

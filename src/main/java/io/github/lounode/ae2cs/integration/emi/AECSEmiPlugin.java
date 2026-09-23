@@ -59,6 +59,7 @@ public class AECSEmiPlugin implements EmiPlugin {
         registry.addCategory(CrystalPulverizerRecipeCategory.RECIPE_TYPE);
         registry.addWorkstation(CrystalPulverizerRecipeCategory.RECIPE_TYPE, EmiStack.of(AECSBlocks.CRYSTAL_PULVERIZER_BLOCK));
         registry.addWorkstation(CrystalPulverizerRecipeCategory.RECIPE_TYPE, EmiStack.of(AECSBlocks.QUARTZ_GRINDSTONE_BLOCK));
+        registry.addWorkstation(CrystalPulverizerRecipeCategory.RECIPE_TYPE, EmiStack.of(AECSBlocks.RESONATING_PULVERIZER_FACTORY_BLOCK));
         registry.getRecipeManager().getAllRecipesFor(AECSRecipeTypes.CRYSTAL_PULVERIZER.get())
                 .stream()
                 .map(CrystalPulverizerRecipeCategory::new)
