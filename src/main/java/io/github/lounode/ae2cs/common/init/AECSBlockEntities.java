@@ -102,7 +102,7 @@ public class AECSBlockEntities {
             AECSBlocks.METEORITE_PATTERN_PROVIDER_BLOCK);
 
     /**
-     * 谐振晶能粉碎机
+     * 晶能粉碎机
      */
     public static final DeferredBlockEntityType<CrystalPulverizerBlockEntity> CRYSTAL_PULVERIZER_BLOCK_ENTITY = create(
             AECSBlockIds.CRYSTAL_PULVERIZER,

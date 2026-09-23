@@ -85,8 +85,7 @@ public class CrystalPulverizerMenu extends UpgradeableMenu<CrystalPulverizerBloc
 
     @Override
     public void broadcastChanges() {
-        // 并行后一个周期的总能量是单份能量乘以并行数，进度条要按这个上限才能正常显示比例
-        recipeNeedTicks = getHost().getActiveRecipeEnergyCost() * getHost().getParallelism();
+        recipeNeedTicks = getHost().getActiveRecipeEnergyCost();
         recipeProgress = getHost().getRecipeProgress();
         maxEnergy = getHost().getAEMaxPower();
         currentEnergy = getHost().getAECurrentPower();

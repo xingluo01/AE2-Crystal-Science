@@ -39,7 +39,7 @@ public class QuartzGrindstoneBlockEntity extends AENetworkedSelfPoweredBlockEnti
                                          IUpgradeableObject, CustomReturnableSubMenuHost {
 
     /**
-     * 基础能量消耗，每tick 200AE，即能量消耗和速率上限均更低的谐振晶能粉碎机
+     * 基础能量消耗，每tick 200AE，即能量消耗和速率上限均更低的晶能粉碎机
      */
     private static final double BASIC_ENERGY_COST_PER_TICK = 200;
 
