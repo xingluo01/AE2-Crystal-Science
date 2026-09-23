@@ -27,3 +27,6 @@ src/generated/resources/.cache/
 
 *.patch
 *.DS_Store
+
+# Local pi agent state (session caches, shiori index) - machine-specific, never shipped.
+.pi/
