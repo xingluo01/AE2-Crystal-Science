@@ -39,6 +39,9 @@ public class CrystalPulverizerGUI extends UpgradeableScreen<CrystalPulverizerMen
         }, style.getImage("energyRateBar"), AdvancedProgressBar.FillMode.BOTTOM_TO_TOP, SimpleComponents.ENERGY_PROGRESS_BAR);
         widgets.add("energyRateBar", this.energyRateBar);
 
+        // 进度条基底层：静态背景，渲染在覆盖层之下（渐显进度条 = 基底 + 按进度填充的覆盖层）
+        widgets.addBackgroundPanel("progressBarBase");
+
         this.workingProgressBar = new AdvancedProgressBar(new IProgressProvider() {
 
             @Override

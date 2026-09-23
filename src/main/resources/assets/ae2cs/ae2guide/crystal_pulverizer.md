@@ -1,20 +1,20 @@
 ---
 navigation:
   parent: index.md
-  title: Crystal Pulverizer
+  title: Resonating Crystal Pulverizer
   icon: ae2cs:crystal_pulverizer
   position: 70
 item_ids:
   - ae2cs:crystal_pulverizer
 ---
 
-# Crystal Pulverizer
+# Resonating Crystal Pulverizer
 
 <Row gap="16">
   <BlockImage id="ae2cs:crystal_pulverizer" scale="8" />
 </Row>
 
-The **Crystal Pulverizer** is a mid-game crystal processing machine provided by AECS.
+The **Resonating Crystal Pulverizer** is a mid-game crystal processing machine provided by AECS.
 It is designed to efficiently convert ores or crystal-based raw materials into their corresponding dusts.
 Functionally, it inherits the processing system of the Quartz Grindstone,
 while significantly improving operating efficiency and automation capabilities.
@@ -23,28 +23,28 @@ while significantly improving operating efficiency and automation capabilities.
 
 ## Functional Role
 
-The Crystal Pulverizer is positioned as an upgraded replacement for the Quartz Grindstone:
+The Resonating Crystal Pulverizer is positioned as an upgraded replacement for the Quartz Grindstone:
 
 - Executes the same recipe types as the Quartz Grindstone
 - Designed for mid-game and later automated production environments
 
-Under identical recipe conditions, the Crystal Pulverizer completes pulverizing operations at a much higher processing speed.
+Under identical recipe conditions, the Resonating Crystal Pulverizer completes pulverizing operations at a much higher processing speed.
 
 ---
 
 ## Power and Efficiency
 
-The Crystal Pulverizer supports **electric power only** and does not allow manual operation.
+The Resonating Crystal Pulverizer supports **electric power only** and does not allow manual operation.
 
 - Installing **Speed Cards** can greatly increase processing throughput per unit time
 
-With multiple Speed Cards installed, the Crystal Pulverizer is capable of meeting the demands of large-scale dust production.
+With multiple Speed Cards installed, the Resonating Crystal Pulverizer is capable of meeting the demands of large-scale dust production.
 
 ---
 
 ## Machine Characteristics
 
-The Crystal Pulverizer has the following general machine properties:
+The Resonating Crystal Pulverizer has the following general machine properties:
 
 - Supports the **[Side Configuration](side_config.md)** system
 - Can automatically draw power from the connected **ME network**

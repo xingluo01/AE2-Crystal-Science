@@ -25,7 +25,7 @@ serving as the starting point for Crystal Seeds and subsequent production chains
 The Quartz Grindstone is designed to provide a **low-threshold, hand-processing alternative** for obtaining dusts in the early stages:
 
 - Can be used before establishing a complete ME network or a stable power system
-- Acts as a transitional device before upgrading to the Crystal Pulverizer
+- Acts as a transitional device before upgrading to the Resonating Crystal Pulverizer
 
 ---
 

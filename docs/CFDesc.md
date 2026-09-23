@@ -85,18 +85,18 @@ On the other side, AECS adds stronger pattern execution and wireless channel sol
   />
 </p>
 
-### 5) Crystal Pulverizer
+### 5) Resonating Crystal Pulverizer
 *Higher throughput crushing with automation-friendly IO and upgrades.*
 <p align="center">
   <img
     src="https://i.imgur.com/ZKBd0mG.png"
     width="90%"
-    alt="Crystal Pulverizer block with industrial appearance"
+    alt="Resonating Crystal Pulverizer block with industrial appearance"
   />
   <img
     src="https://i.imgur.com/ryyQhS9.png"
     width="90%"
-    alt="Crystal Pulverizer GUI showing input, output, and upgrade slots"
+    alt="Resonating Crystal Pulverizer GUI showing input, output, and upgrade slots"
   />
 </p>
 
