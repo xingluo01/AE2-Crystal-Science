@@ -12,6 +12,8 @@ import io.github.lounode.ae2cs.common.menu.CrystalInfuserMenu;
 import io.github.lounode.ae2cs.common.menu.CrystalPulverizerMenu;
 import io.github.lounode.ae2cs.common.menu.EntropyVariationReactionChamberMenu;
 import io.github.lounode.ae2cs.common.menu.PulseCentrifugeMenu;
+import io.github.lounode.ae2cs.common.menu.QuartzGrindstoneMenu;
+import io.github.lounode.ae2cs.common.menu.ResonatingPulverizerFactoryMenu;
 import io.github.lounode.ae2cs.common.recipe.circuit_etcher.CircuitEtcherRecipe;
 import io.github.lounode.ae2cs.common.recipe.crystal_aggregator.CrystalAggregatorRecipe;
 import io.github.lounode.ae2cs.common.recipe.crystal_infuser.CrystalInfuserRecipe;
@@ -134,6 +136,14 @@ public class JeiPlugin implements IModPlugin {
         registration.addRecipeTransferHandler(new MachineRecipeTransferInfo<>(
                 CrystalPulverizerMenu.class,
                 AECSMenus.CRYSTAL_PULVERIZER_MENU.get(),
+                CrystalPulverizerRecipeCategory.RECIPE_TYPE));
+        registration.addRecipeTransferHandler(new MachineRecipeTransferInfo<>(
+                ResonatingPulverizerFactoryMenu.class,
+                AECSMenus.RESONATING_PULVERIZER_FACTORY_MENU.get(),
+                CrystalPulverizerRecipeCategory.RECIPE_TYPE));
+        registration.addRecipeTransferHandler(new MachineRecipeTransferInfo<>(
+                QuartzGrindstoneMenu.class,
+                AECSMenus.QUARTZ_GRINDSTONE_MENU.get(),
                 CrystalPulverizerRecipeCategory.RECIPE_TYPE));
         registration.addRecipeTransferHandler(new MachineRecipeTransferInfo<>(
                 CrystalInfuserMenu.class,
