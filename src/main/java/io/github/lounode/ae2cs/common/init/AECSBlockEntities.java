@@ -111,6 +111,15 @@ public class AECSBlockEntities {
             AECSBlocks.CRYSTAL_PULVERIZER_BLOCK);
 
     /**
+     * 谐振粉碎工厂
+     */
+    public static final DeferredBlockEntityType<ResonatingPulverizerFactoryBlockEntity> RESONATING_PULVERIZER_FACTORY_BLOCK_ENTITY = create(
+            AECSBlockIds.RESONATING_PULVERIZER_FACTORY,
+            ResonatingPulverizerFactoryBlockEntity.class,
+            ResonatingPulverizerFactoryBlockEntity::new,
+            AECSBlocks.RESONATING_PULVERIZER_FACTORY_BLOCK);
+
+    /**
      * 石英磨具
      */
     public static final DeferredBlockEntityType<QuartzGrindstoneBlockEntity> QUARTZ_GRINDSTONE_BLOCK_ENTITY = create(

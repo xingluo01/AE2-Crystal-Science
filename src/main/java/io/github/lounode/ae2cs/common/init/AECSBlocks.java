@@ -173,6 +173,11 @@ public class AECSBlocks {
     public static final DeferredBlock<CrystalPulverizerBlock> CRYSTAL_PULVERIZER_BLOCK = registerOtherBlock(AECSBlockIds.CRYSTAL_PULVERIZER, () -> new CrystalPulverizerBlock(copy(Blocks.IRON_BLOCK)));
 
     /**
+     * 谐振粉碎工厂：晶能粉碎机的升级型，三乘三输入输出与并行处理
+     */
+    public static final DeferredBlock<ResonatingPulverizerFactoryBlock> RESONATING_PULVERIZER_FACTORY_BLOCK = registerOtherBlock(AECSBlockIds.RESONATING_PULVERIZER_FACTORY, () -> new ResonatingPulverizerFactoryBlock(copy(Blocks.IRON_BLOCK)));
+
+    /**
      * 晶能谐振器
      */
     public static final DeferredBlock<CrystalVibrationChamberBlock> CRYSTAL_VIBRATION_CHAMBER_BLOCK = registerOtherBlock(AECSBlockIds.CRYSTAL_VIBRATION_CHAMBER, () -> new CrystalVibrationChamberBlock(AEBaseBlock.metalProps().strength(4.5f)));
