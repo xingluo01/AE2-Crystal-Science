@@ -35,6 +35,7 @@ public class AECSBlockIds {
     public static final String QUARTZ_GRINDSTONE = "quartz_grindstone";
     public static final String CRYSTAL_PULVERIZER = "crystal_pulverizer";
     public static final String CRYSTAL_VIBRATION_CHAMBER = "crystal_vibration_chamber";
+    public static final String CHARGED_RESONATING_GENERATOR = "charged_resonating_generator";
     public static final String CRYSTAL_AGGREGATOR = "crystal_aggregator";
     public static final String CRYSTAL_INFUSER = "crystal_infuser";
     public static final String PULSE_CENTRIFUGE = "pulse_centrifuge";

@@ -178,6 +178,14 @@ public class AECSBlocks {
     public static final DeferredBlock<CrystalVibrationChamberBlock> CRYSTAL_VIBRATION_CHAMBER_BLOCK = registerOtherBlock(AECSBlockIds.CRYSTAL_VIBRATION_CHAMBER, () -> new CrystalVibrationChamberBlock(AEBaseBlock.metalProps().strength(4.5f)));
 
     /**
+     * 充能共振发电机
+     *
+     * <p>属性对齐 AE2 的水晶谐振发电机：玻璃材质类型（无色地图色 + 玻璃音效），
+     * 且因为是非满格方块而需要 {@code noOcclusion}（否则相邻方块朝它的面会被错误剔除）。</p>
+     */
+    public static final DeferredBlock<ChargedResonatingGeneratorBlock> CHARGED_RESONATING_GENERATOR_BLOCK = registerOtherBlock(AECSBlockIds.CHARGED_RESONATING_GENERATOR, () -> new ChargedResonatingGeneratorBlock(AEBaseBlock.glassProps().noOcclusion().forceSolidOn()));
+
+    /**
      * 水晶聚合器
      */
     public static final DeferredBlock<CrystalAggregatorBlock> CRYSTAL_AGGREGATOR_BLOCK = registerOtherBlock(AECSBlockIds.CRYSTAL_AGGREGATOR, () -> new CrystalAggregatorBlock(AEBaseBlock.metalProps()));

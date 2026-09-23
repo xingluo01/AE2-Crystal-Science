@@ -75,6 +75,15 @@ public class AECSBlockEntities {
             AECSBlocks.CRYSTAL_VIBRATION_CHAMBER_BLOCK);
 
     /**
+     * 充能共振发电机
+     */
+    public static final DeferredBlockEntityType<ChargedResonatingGeneratorBlockEntity> CHARGED_RESONATING_GENERATOR_BLOCK_ENTITY = create(
+            AECSBlockIds.CHARGED_RESONATING_GENERATOR,
+            ChargedResonatingGeneratorBlockEntity.class,
+            ChargedResonatingGeneratorBlockEntity::new,
+            AECSBlocks.CHARGED_RESONATING_GENERATOR_BLOCK);
+
+    /**
      * 电路蚀刻器
      */
     public static final DeferredBlockEntityType<CircuitEtcherBlockEntity> CIRCUIT_ETCHER_BLOCK_ENTITY = create(

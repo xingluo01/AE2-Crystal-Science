@@ -196,6 +196,7 @@ public class AECSItemTagProvider extends ItemTagsProvider {
                 .add(AECSBlocks.QUARTZ_GRINDSTONE_BLOCK.asItem())
                 .add(AECSBlocks.CRYSTAL_PULVERIZER_BLOCK.asItem())
                 .add(AECSBlocks.CRYSTAL_VIBRATION_CHAMBER_BLOCK.asItem())
+                .add(AECSBlocks.CHARGED_RESONATING_GENERATOR_BLOCK.asItem())
                 .add(AECSBlocks.CRYSTAL_AGGREGATOR_BLOCK.asItem())
                 .add(AECSBlocks.CRYSTAL_INFUSER_BLOCK.asItem())
                 .add(AECSBlocks.PULSE_CENTRIFUGE_BLOCK.asItem())
