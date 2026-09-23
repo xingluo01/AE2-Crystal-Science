@@ -8,6 +8,7 @@ import io.github.lounode.ae2cs.util.KeyCounterHelper;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.crafting.IPatternDetails;
+import appeng.api.implementations.blockentities.PatternContainerGroup;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -26,13 +27,20 @@ import appeng.api.upgrades.IUpgradeableObject;
 import appeng.api.upgrades.UpgradeInventories;
 import appeng.blockentity.crafting.IMolecularAssemblerSupportedPattern;
 import appeng.core.definitions.AEItems;
+import appeng.core.localization.GuiText;
 import appeng.core.settings.TickRates;
+import appeng.helpers.InterfaceLogicHost;
 import appeng.helpers.patternprovider.PatternProviderLogic;
+import appeng.helpers.patternprovider.PatternProviderLogicHost;
 import appeng.me.helpers.MachineSource;
 
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.Nameable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingInput;
 
@@ -40,7 +48,10 @@ import it.unimi.dsi.fastutil.objects.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MeteoritePatternProviderLogic extends PatternProviderLogic implements IUpgradeableObject {
 
@@ -208,6 +219,85 @@ public class MeteoritePatternProviderLogic extends PatternProviderLogic implemen
         if (worked)
             saveChanges();
         return worked;
+    }
+
+    /**
+     * How the pattern access terminal groups this provider: it takes the name and icon of the machine it
+     * feeds, which is AE2's own rule for pattern providers, and falls back to its own when there is no
+     * single such machine.
+     *
+     * <p>The faces looked at are AE2's own set - its connected neighbours minus the ones that are a
+     * provider, or an interface on the same grid - and on top of that a neighbour is skipped when its
+     * block entity is a provider. That second test is what keeps two providers side by side, or a chain
+     * of them, from all appearing under one name: what this provider feeds is a machine, never a
+     * provider.</p>
+     */
+    @Override
+    public PatternContainerGroup getTerminalGroup() {
+        // A name the player set wins over anything the neighbours say.
+        if (meteoriteHost instanceof Nameable nameable && nameable.hasCustomName()) {
+            return new PatternContainerGroup(meteoriteHost.getTerminalIcon(), nameable.getCustomName(), List.of());
+        }
+
+        var blockEntity = meteoriteHost.getBlockEntity();
+        var level = blockEntity == null ? null : blockEntity.getLevel();
+        var groups = new LinkedHashSet<PatternContainerGroup>();
+        if (level != null) {
+            for (var side : getBorrowableSides()) {
+                var pos = blockEntity.getBlockPos().relative(side);
+                var neighbour = level.getBlockEntity(pos);
+                if (neighbour == null || neighbour instanceof PatternProviderLogicHost) {
+                    continue;
+                }
+                var group = PatternContainerGroup.fromMachine(level, pos, side.getOpposite());
+                if (group != null) {
+                    groups.add(group);
+                }
+            }
+        }
+
+        // Exactly one machine: present this provider as that machine.
+        if (groups.size() == 1) {
+            return groups.iterator().next();
+        }
+
+        // Several different machines, or none: keep our own name and, when there are several, list them.
+        var tooltip = new ArrayList<Component>();
+        if (groups.size() > 1) {
+            tooltip.add(GuiText.AdjacentToDifferentMachines.text().withStyle(ChatFormatting.BOLD));
+            for (var group : groups) {
+                tooltip.add(group.name());
+                for (var line : group.tooltip()) {
+                    tooltip.add(Component.literal("  ").append(line));
+                }
+            }
+        }
+
+        var icon = meteoriteHost.getTerminalIcon();
+        return new PatternContainerGroup(icon, icon.getDisplayName(), tooltip);
+    }
+
+    /**
+     * The faces worth asking for a name: AE2's own set for a pattern provider, which drops the neighbours
+     * that are a provider, or an interface on the same grid. Mirrors the filtering the parent class applies
+     * to the same faces.
+     */
+    private Set<Direction> getBorrowableSides() {
+        var sides = EnumSet.noneOf(Direction.class);
+        sides.addAll(meteoriteHost.getTargets());
+
+        var node = mainNode.getNode();
+        if (node != null) {
+            for (var entry : node.getInWorldConnections().entrySet()) {
+                var otherNode = entry.getValue().getOtherSide(node);
+                var owner = otherNode.getOwner();
+                if (owner instanceof PatternProviderLogicHost
+                        || (owner instanceof InterfaceLogicHost && otherNode.getGrid().equals(mainNode.getGrid()))) {
+                    sides.remove(entry.getKey());
+                }
+            }
+        }
+        return sides;
     }
 
     @Override

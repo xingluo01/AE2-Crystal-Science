@@ -3,8 +3,8 @@ package io.github.lounode.ae2cs.common.me.part;
 import io.github.lounode.ae2cs.AE2CrystalScience;
 import io.github.lounode.ae2cs.common.init.AECSMenus;
 import io.github.lounode.ae2cs.common.init.AECSParts;
+import io.github.lounode.ae2cs.common.me.logic.DisksMeteoritePatternProviderLogic;
 import io.github.lounode.ae2cs.common.me.logic.MeteoritePatternProviderHost;
-import io.github.lounode.ae2cs.common.me.logic.MeteoritePatternProviderLogic;
 
 import appeng.api.AECapabilities;
 import appeng.api.parts.IPartItem;
@@ -68,7 +68,7 @@ public class MeteoritePatternProviderPart extends PatternProviderPart implements
 
     @Override
     protected PatternProviderLogic createLogic() {
-        return new MeteoritePatternProviderLogic(getMainNode(), this, 63);
+        return new DisksMeteoritePatternProviderLogic(getMainNode(), this, 63);
     }
 
     @Override
