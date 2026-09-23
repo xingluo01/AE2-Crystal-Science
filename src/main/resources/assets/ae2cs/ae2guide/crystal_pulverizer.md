@@ -55,13 +55,22 @@ The Crystal Pulverizer has the following general machine properties:
 
 ---
 
-## Upgraded Variant: Resonating Pulverizer Factory
+## Standard and Upgraded Variants
 
-The **Resonating Pulverizer Factory** is the upgraded variant of this machine and runs the **same recipes**.
-Its power, upgrade and automation behavior is otherwise identical, so only the slots and throughput differ:
-it replaces the 1 input / 4 output slots with two 3x3 grids and processes up to **32** items at a time.
+The Crystal Pulverizer and the Resonating Pulverizer Factory share the same recipes,
+as well as the same power, upgrade and automation behavior.
+They differ only in slot configuration and processing capacity:
 
-The gain does not come from a faster operation - finishing a whole batch takes about as long as this machine takes
-for one item, so throughput scales with the batch size.
-The Speed Cards covered above keep their effect and additionally raise the batch size (**+4** each),
-as does the **Meteorite Overclock Card** (**+16**), up to the cap of **32**.
+- **Crystal Pulverizer**
+  - 1 input slot and 4 output slots
+  - Processes 1 item per operation
+
+- **Resonating Pulverizer Factory**
+  - 3x3 input and output grids
+  - Processes up to **32** items per operation
+
+The Resonating Pulverizer Factory does not shorten a single operation;
+it completes a full batch in approximately the time the Crystal Pulverizer requires for one item.
+Processing capacity therefore scales with the batch size rather than with the cycle speed.
+Speed Cards retain their standard effect and additionally increase the batch size by 4 each;
+the Meteorite Overclock Card follows the same rule at 16 each, up to a maximum of **32**.
