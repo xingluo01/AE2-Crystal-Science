@@ -33,7 +33,7 @@ dependencies {
     // Its public surface is versioned by io.github.lounode.ae2pattern.api.PatternDiskApi.API_VERSION.
     // The jar comes from the sibling checkout; override PATTERN_DISK_DEV_JAR to point elsewhere.
     def patternDiskJar = providers.environmentVariable('PATTERN_DISK_DEV_JAR')
-            .orElse(layout.projectDirectory.file('../AE2-Pattern-Disk/build/libs/ae2_pattern_disk-0.2.3.jar').asFile.absolutePath)
+            .orElse(layout.projectDirectory.file('../AE2-Pattern-Disk/build/libs/ae2_pattern_disk-0.6.2.jar').asFile.absolutePath)
             .get()
     if (!file(patternDiskJar).exists()) {
         throw new GradleException("AE2 Pattern Disk jar not found at ${patternDiskJar}. Build the sibling " +
