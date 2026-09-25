@@ -44,14 +44,16 @@ import java.util.Optional;
 /**
  * 谐振粉碎工厂的方块实体。
  *
- * <p>与晶能粉碎机共用同一套配方类型（{@link AECSRecipeTypes#CRYSTAL_PULVERIZER}），但输入输出各扩到九格，
+ * <p>
+ * 与晶能粉碎机共用同一套配方类型（{@link AECSRecipeTypes#CRYSTAL_PULVERIZER}），但输入输出各扩到九格，
  * 并支持并行处理。并行不缩短单个加工周期：一个周期的目标能量与每 tick 推进量都按并行数放大，
- * 因此每份产物的能量成本不变，只是周期结束时一次性产出多份。</p>
+ * 因此每份产物的能量成本不变，只是周期结束时一次性产出多份。
+ * </p>
  */
 @ProvideCaps(IItemHandler.class)
 @ProvideCaps(IFluidHandler.class)
 public class ResonatingPulverizerFactoryBlockEntity extends AENetworkedSelfPoweredBlockEntity implements IUpgradeableObject,
-        CustomReturnableSubMenuHost, MachineFluidHost {
+                                                    CustomReturnableSubMenuHost, MachineFluidHost {
 
     /**
      * 基础能量消耗，每tick 200AE，每多一个加速卡，则此数值翻倍，同时机器运行速率也翻倍。
@@ -251,8 +253,7 @@ public class ResonatingPulverizerFactoryBlockEntity extends AENetworkedSelfPower
         // 3) 已经完成：按并行数批量消耗与产出
         if (recipeProgress >= batchEnergy) {
             ItemStack sample = findMatchingInput(recipe);
-            ItemStack result = sample.isEmpty() ? ItemStack.EMPTY
-                    : recipe.assemble(new SingleRecipeInput(sample), level.registryAccess());
+            ItemStack result = sample.isEmpty() ? ItemStack.EMPTY : recipe.assemble(new SingleRecipeInput(sample), level.registryAccess());
             if (result.isEmpty()) // 如果我们拿不到输出，说明配方可能有问题，此时清空状态
             {
                 recipeProgress = 0;

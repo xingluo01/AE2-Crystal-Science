@@ -27,8 +27,10 @@ import static io.github.lounode.ae2cs.common.init.AECSBlockProperties.ACTIVE;
 /**
  * 谐振粉碎工厂。
  *
- * <p>晶能粉碎机（{@code crystal_pulverizer}）的升级型：输入输出各三乘三格，并支持最高 32 份的并行处理。
- * 它是一台独立机器，与晶能粉碎机各自注册、各自有方块实体与菜单。</p>
+ * <p>
+ * 晶能粉碎机（{@code crystal_pulverizer}）的升级型：输入输出各三乘三格，并支持最高 32 份的并行处理。
+ * 它是一台独立机器，与晶能粉碎机各自注册、各自有方块实体与菜单。
+ * </p>
  */
 public class ResonatingPulverizerFactoryBlock extends AEBaseEntityBlock<ResonatingPulverizerFactoryBlockEntity> {
 

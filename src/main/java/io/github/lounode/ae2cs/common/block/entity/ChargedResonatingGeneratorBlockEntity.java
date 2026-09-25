@@ -10,10 +10,14 @@ import net.minecraft.world.level.block.state.BlockState;
 /**
  * 充能共振发电机的方块实体。
  *
- * <p>能力来自父类：{@link AENetworkedSelfPoweredBlockEntity} 已经接了 AE 网络能量存储与 Forge 能量存储，
- * 无需在这里重复声明。</p>
+ * <p>
+ * 能力来自父类：{@link AENetworkedSelfPoweredBlockEntity} 已经接了 AE 网络能量存储与 Forge 能量存储，
+ * 无需在这里重复声明。
+ * </p>
  *
- * <p>产能规则尚未确定，因此这里还没有自己的 tick 逻辑；等玩法定下来再补。</p>
+ * <p>
+ * 产能规则尚未确定，因此这里还没有自己的 tick 逻辑；等玩法定下来再补。
+ * </p>
  */
 public class ChargedResonatingGeneratorBlockEntity extends AENetworkedSelfPoweredBlockEntity {
 

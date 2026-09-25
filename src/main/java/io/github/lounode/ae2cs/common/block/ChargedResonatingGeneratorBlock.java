@@ -31,15 +31,19 @@ import org.jetbrains.annotations.Nullable;
 /**
  * 充能共振发电机。
  *
- * <p>外观借用 AE2 的水晶谐振发电机：模型与换色贴图都在本模组资源里，见
- * {@code models/block/charged_resonating_generator/}。</p>
+ * <p>
+ * 外观借用 AE2 的水晶谐振发电机：模型与换色贴图都在本模组资源里，见
+ * {@code models/block/charged_resonating_generator/}。
+ * </p>
  *
- * <p>这不是满格方块：模型主体只有 12/16 宽，朝向前方的一侧另有凸出，因此必须声明
+ * <p>
+ * 这不是满格方块：模型主体只有 12/16 宽，朝向前方的一侧另有凸出，因此必须声明
  * {@code noOcclusion}（否则相邻方块朝它的面会被错误剔除）并给出收窄的碰撞箱。朝向、碰撞箱与
- * 含水行为都对齐 AE2 原件，六面可放。</p>
+ * 含水行为都对齐 AE2 原件，六面可放。
+ * </p>
  */
 public class ChargedResonatingGeneratorBlock extends AEBaseEntityBlock<ChargedResonatingGeneratorBlockEntity>
-        implements SimpleWaterloggedBlock {
+                                             implements SimpleWaterloggedBlock {
 
     private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
@@ -142,7 +146,7 @@ public class ChargedResonatingGeneratorBlock extends AEBaseEntityBlock<ChargedRe
 
     @Override
     public BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level,
-            BlockPos currentPos, BlockPos facingPos) {
+                                  BlockPos currentPos, BlockPos facingPos) {
         if (state.getValue(WATERLOGGED)) {
             level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }

@@ -152,13 +152,17 @@ public class AECSBlockStateProvider extends BlockStateProvider {
     /**
      * 充能共振发电机：外观借用 AE2 的水晶谐振发电机（Crystal Resonance Generator）。
      *
-     * <p>模型和贴图都是本模组资源：模型取自 AE2 的 Blockbench 文件（只改掉了纹理引用），贴图是本模组的换色版，
-     * 仍保持 AE2 原件 32x64 的两帧动画布局，动画由贴图自带的 {@code .mcmeta} 驱动。</p>
+     * <p>
+     * 模型和贴图都是本模组资源：模型取自 AE2 的 Blockbench 文件（只改掉了纹理引用），贴图是本模组的换色版，
+     * 仍保持 AE2 原件 32x64 的两帧动画布局，动画由贴图自带的 {@code .mcmeta} 驱动。
+     * </p>
      *
-     * <p>这里用 {@link #getVariantBuilder} 而不是 {@code multiVariantGenerator}：后者用 {@code PropertyDispatch}
+     * <p>
+     * 这里用 {@link #getVariantBuilder} 而不是 {@code multiVariantGenerator}：后者用 {@code PropertyDispatch}
      * 分发，而分发里的属性必须是方块自己的属性——本方块已经是六向 FACING，套用专给水平朝向方块的
      * {@code createHorizontalFacingDispatch}（HORIZONTAL_FACING）会对不上并报错。{@code partialState} 只列 FACING，
-     * WATERLOGGED 由 MC 按通配处理，产物与 AE2 原件一致。</p>
+     * WATERLOGGED 由 MC 按通配处理，产物与 AE2 原件一致。
+     * </p>
      */
     private void genChargedResonatingGenerator() {
         Block block = AECSBlocks.CHARGED_RESONATING_GENERATOR_BLOCK.get();
