@@ -30,3 +30,6 @@ src/generated/resources/.cache/
 
 # Local pi agent state (session caches, shiori index) - machine-specific, never shipped.
 .pi/
+
+# Local run scripts - convenience wrappers for this machine; call gradlew.bat directly.
+runClient.bat
